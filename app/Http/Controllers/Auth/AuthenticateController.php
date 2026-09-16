@@ -21,15 +21,13 @@ class AuthenticateController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($fields)) {
+        if (Auth::attempt($fields, $request->remember)) {
             $request->session()->regenerate();
-
             $user = Auth::user();
-
             return match ($user->role) {
                 UserRole::Admin => redirect()->route('admin.dashboard'),
                 UserRole::Agent => redirect()->route('agent.dashboard'),
-                UserRole::Customer => redirect()->route('dashboard'),
+                UserRole::Customer => redirect()->route('customer.dashboard'),
             };
         } else {
             return back()->withErrors([
@@ -41,10 +39,8 @@ class AuthenticateController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect()->route('login');
     }
 }

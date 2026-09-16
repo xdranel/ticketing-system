@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
 @layer components {
+    header {
+        @apply bg-slate-800 shadow-md;
+    }
+    nav {
+        @apply p-3 max-w-screen-lg mx-auto flex items-center justify-between;
+    }
+    main {
+        @apply max-w-screen-lg mx-auto;
+    }
     .input-form-style {
         @apply mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-slate-600 focus:outline-none focus:ring-1 focus:ring-slate-600 sm:text-sm
     }
@@ -11,5 +20,13 @@
 
     .primary-btn-1 {
         @apply w-full rounded-lg bg-slate-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-500
+    }
+
+    .round-btn {
+        @apply w-8 h-8 overflow-auto rounded-full bg-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-100 focus:ring-offset-2 focus:ring-offset-slate-800;
+    }
+
+    .nav-link {
+        @apply text-slate-200 hover:bg-slate-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium;
     }
 }
