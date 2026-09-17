@@ -1,6 +1,6 @@
 <x-layout>
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-slate-800">Customer Ticket</h1>
+        <h1 class="text-2xl font-bold text-slate-800">Agent Dashboard</h1>
     </div>
 
     <div>

@@ -35,7 +35,7 @@
             <form action="{{ route('login') }}" method="post">
                 @csrf
                 <div class="mb-4">
-                    <x-input-field :label="'Email'" value="{{old('email')}}" :icon="'at'"
+                    <x-input-field :label="'Email'" :name="'email'" value="{{old('email')}}" :icon="'at'"
                                    :placeholder="'Enter your email'"/>
                     @error('email')
                     <p class="error">{{$message}}</p>
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <x-input-field :label="'Password'" :type="'password'" :icon="'key'"
+                    <x-input-field :label="'Password'" :name="'password'" :type="'password'" :icon="'key'"
                                    :placeholder="'Enter your password'"/>
                     @error('password')
                     <p class="error">{{$message}}</p>

@@ -26,6 +26,7 @@
             <div class="md:col-span-4">
                 <x-input-field
                     :label="'Subject'"
+                    :name="'subject'"
                     :placeholder="'Enter the subject of your ticket...'"
                     value="{{old('subject')}}"
                 ></x-input-field>
