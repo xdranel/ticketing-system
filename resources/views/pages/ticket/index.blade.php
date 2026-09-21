@@ -11,7 +11,7 @@
             <form
                 action="{{ route('tickets.index') }}"
                 method="GET"
-                class="grid grid-cols-1 md:grid-cols-5 gap-4"
+                class="grid grid-cols-1 md:grid-cols-4 gap-4"
             >
                 <div>
                     <x-input-field
@@ -54,7 +54,7 @@
                         type="submit"
                         class="primary-btn-1"
                     >Apply</button>
-                    <a href="{{ route('tickets.index') }}" class="secondary-btn-1">Reset</a>
+                    <a href="{{ route('tickets.index') }}" class="primary-btn-1">Reset</a>
                 </div>
 
             </form>

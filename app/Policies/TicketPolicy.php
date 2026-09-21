@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\TicketStatus;
 use App\Enums\UserRole;
 use App\Models\Ticket;
 use App\Models\User;
@@ -48,6 +49,19 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket): bool
     {
         return $user->role === UserRole::Agent && $ticket->assigned_to === $user->id;
+    }
+
+    public function reply(User $user, Ticket $ticket): bool
+    {
+        if ($ticket->status === TicketStatus::Closed) {
+            return false;
+        }
+
+        return match ($user->role) {
+            UserRole::Customer => $ticket->customer_id === $user->id,
+            UserRole::Agent => $ticket->assigned_to === $user->id,
+            default => false,
+        };
     }
 
     /**

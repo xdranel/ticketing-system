@@ -21,6 +21,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/ticket-attachments/{attachment}/download', [TicketAttachmentController::class, 'download'])->name('ticket-attachments.download');
 
+    Route::post('/tickets/{ticket}/replies', [\App\Http\Controllers\TicketReplyController::class, 'store'])->name('tickets.replies.store');
+
     Route::middleware(['role:admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     });
