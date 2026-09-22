@@ -8,14 +8,21 @@ use App\Enums\TicketStatus;
 use App\Enums\UserRole;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Models\ActivityLog;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class TicketController extends Controller
 {
+    public function __construct(
+        private ActivityLogService $activityLog
+    )
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -94,6 +101,14 @@ class TicketController extends Controller
 
         $ticket = $customer->tickets()->create($validated);
 
+        $this->activityLog->log(
+            ticket: $ticket,
+            actor: $request->user(),
+            action: 'ticket.created',
+            description: 'Ticket was created',
+            visibility: 'public'
+        );
+
         foreach ($attachments as $file) {
             $path = $file->store('', 'attachments');
 
@@ -112,7 +127,7 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Request $request, Ticket $ticket)
     {
         $this->authorize('view', $ticket);
         $ticket->load([
@@ -122,7 +137,18 @@ class TicketController extends Controller
             'replies.user'
         ]);
 
-        return view('pages.ticket.show', compact('ticket'));
+        $activitiesQuery = ActivityLog::where('ticket_id', $ticket->id)
+            ->where('ticket_reference', $ticket->reference);
+
+        if ($request->user()->role === UserRole::Customer) {
+            $activitiesQuery->where('visibility', 'public');
+        }
+
+        $activities = $activitiesQuery
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.ticket.show', compact('ticket', 'activities'));
     }
 
     /**
@@ -145,17 +171,90 @@ class TicketController extends Controller
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
         $validated = $request->validated();
-        $status = TicketStatus::from($validated['status']);
 
-        $ticket->priority = TicketPriority::from($validated['priority']);
-        $ticket->status = $status;
-        $ticket->closed_at = $status === TicketStatus::Closed ? now() : null;
+        $oldStatus = $ticket->status;
+        $oldPriority = $ticket->priority;
+        $oldAssignedId = $ticket->assigned_to;
+
+        $newStatus = TicketStatus::from($validated['status']);
+        $newPriority = TicketPriority::from($validated['priority']);
+
+        $ticket->priority = $newPriority;
+        $ticket->status = $newStatus;
+
+        $ticket->closed_at = $newStatus === TicketStatus::Closed
+            ? now()
+            : null;
 
         if ($request->user()->role === UserRole::Admin) {
             $ticket->assigned_to = $validated['assigned_to'] ?? null;
         }
 
         $ticket->save();
+
+        if ($oldStatus !== $ticket->status) {
+            $this->activityLog->log(
+                ticket: $ticket,
+                actor: $request->user(),
+                action: 'ticket.status_changed',
+                description: sprintf(
+                    'Ticket status changed from %s to %s',
+                    $oldStatus->value,
+                    $ticket->status->value
+                ),
+                metadata: [
+                    'old_status' => $oldStatus->value,
+                    'new_status' => $ticket->status->value,
+                ],
+            );
+        }
+
+        if ($oldPriority !== $ticket->priority) {
+            $this->activityLog->log(
+                ticket: $ticket,
+                actor: $request->user(),
+                action: 'ticket.priority_changed',
+                description: sprintf(
+                    'Ticket priority changed from %s to %s',
+                    $oldPriority->value,
+                    $ticket->priority->value
+                ),
+                metadata: [
+                    'old_priority' => $oldPriority->value,
+                    'new_priority' => $ticket->priority->value,
+                ],
+            );
+        }
+
+        if ($oldAssignedId !== $ticket->assigned_to) {
+            $oldAssignee = $oldAssignedId
+                ? User::find($oldAssignedId)
+                : null;
+
+            $newAssignee = $ticket->assigned_to
+                ? User::find($ticket->assigned_to)
+                : null;
+
+            $oldAssigneeName = $oldAssignee?->name ?? 'Unassigned';
+            $newAssigneeName = $newAssignee?->name ?? 'Unassigned';
+
+            $this->activityLog->log(
+                ticket: $ticket,
+                actor: $request->user(),
+                action: 'ticket.assigned',
+                description: sprintf(
+                    'Ticket assigned from %s to %s',
+                    $oldAssigneeName,
+                    $newAssigneeName
+                ),
+                metadata: [
+                    'old_assignee_id' => $oldAssignedId,
+                    'old_assignee_name' => $oldAssigneeName,
+                    'new_assignee_id' => $ticket->assigned_to,
+                    'new_assignee_name' => $newAssigneeName,
+                ]
+            );
+        }
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket updated successfully.');

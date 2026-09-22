@@ -42,7 +42,67 @@
     </x-defaultCard>
 
     <x-defaultCard>
-        <h2 class="text-xl font-bold">
+        <div x-data="{ open: false }">
+            <h4>Activity Timeline</h4>
+
+            <button
+                @click="open = !open"
+                class="w-full flex items-center justify-between text-left focus:outline-none group cursor-pointer py-2">
+
+                <h3 class="text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
+                    Activities Timeline
+                </h3>
+
+                <!-- Rotating Arrow Icon -->
+                <svg
+                    :class="{ 'rotate-90': open }"
+                    class="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <div x-show="open"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 class="mt-4 pt-4 border-t border-gray-100 space-y-4"
+            >
+                @forelse ($activities as $activity)
+                    <div class="border-start border-3 ps-3 mb-4">
+
+                        <div class="d-flex justify-content-between">
+                            <strong>
+                                {{ $activity->actor_name }}
+                            </strong>
+
+                            <small class="text-muted">
+                                {{ $activity->created_at?->format('d M Y H:i') }}
+                            </small>
+                        </div>
+
+                        <div class="mt-1">
+                            {{ $activity->description }}
+                        </div>
+
+                        <small class="text-muted">
+                            {{ $activity->action }}
+                        </small>
+
+                    </div>
+                @empty
+                    <p class="text-muted mb-0">
+                        No activity recorded yet.
+                    </p>
+                @endforelse
+            </div>
+        </div>
+    </x-defaultCard>
+
+    <x-defaultCard>
+        <h2 class="normal-title">
             <span>Replies</span>
         </h2>
 

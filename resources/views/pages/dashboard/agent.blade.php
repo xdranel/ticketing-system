@@ -41,9 +41,6 @@
                 {{ $ticketsCounts[\App\Enums\TicketStatus::Closed->value] ?? 0 }}
             </p>
         </div>
-
-
-
         {{--        <div class="flex-1 flex-col gap-4 w-full">--}}
         {{--            @forelse($tickets as $ticket)--}}
         {{--                <x-ticketCard :ticket="$ticket" />--}}
