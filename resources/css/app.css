@@ -33,4 +33,8 @@
     .filter-title {
         @apply block text-sm font-medium text-slate-900;
     }
+
+    .normal-title {
+        @apply block text-xl font-bold text-slate-900;
+    }
 }
