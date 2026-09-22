@@ -1,5 +1,6 @@
 @props([
     'label',
+    'name' => '',
     'type' => 'text',
     'placeholder' => '',
     'icon' => null,
@@ -10,8 +11,8 @@
 
 <div>
     <label
-        for="{{$label}}"
-        class="block text-sm font-medium text-slate-900"
+        for="{{ $name }}"
+        class="filter-title"
     >{{ $label }}</label>
 
     <div class="relative mt-1 rounded-md">
@@ -24,8 +25,8 @@
         @endif
         <input
             type="{{ $type }}"
-            name="{{ strtolower($label) }}"
-            id="{{ $label }}"
+            name="{{ $name }}"
+            id="{{ $name }}"
             value="{{ $value }}"
             placeholder="{{ $placeholder }}"
             class="input-form-style {{$styles}} {{$icon ? 'pl-9' : 'pl-3'}}"

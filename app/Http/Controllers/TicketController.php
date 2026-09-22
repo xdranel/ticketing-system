@@ -29,9 +29,32 @@ class TicketController extends Controller
             UserRole::Admin => Ticket::query(),
         };
 
-        $tickets = $query->with(['customer', 'assignee'])
-            ->latest()
-            ->paginate(10);
+        $query->with(['customer', 'assignee'])
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->input('search');
+
+                $query->where(function ($query) use ($search) {
+                    $query
+                        ->where('reference', 'like', "%{$search}%")
+                        ->orWhere('subject', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->filled('category'), function ($query) use ($request) {
+                $query->where('category', TicketCategory::from($request->input('category')));
+            })
+            ->when($request->filled('priority'), function ($query) use ($request) {
+                $query->where('priority', TicketPriority::from($request->input('priority')));
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $query->where('status', TicketStatus::from($request->input('status')));
+            })
+            ->latest();
+
+
+        $tickets = $query
+            ->paginate(10)
+            ->withQueryString();
 
         return view('pages.ticket.index', compact('tickets'));
     }
@@ -92,7 +115,12 @@ class TicketController extends Controller
     public function show(Ticket $ticket)
     {
         $this->authorize('view', $ticket);
-        $ticket->load(['customer', 'assignee', 'attachments']);
+        $ticket->load([
+            'customer',
+            'assignee',
+            'attachments',
+            'replies.user'
+        ]);
 
         return view('pages.ticket.show', compact('ticket'));
     }

@@ -11,11 +11,17 @@ class AgentController extends Controller
 {
     public function index(Request $request)
     {
-        $tickets = $request->user()
-            ->assignedTickets()
-            ->with('customer')
-            ->latest()
-            ->paginate(10);
-        return view('pages.dashboard.agent', compact('tickets'));
+        $agent = $request->user();
+
+        $assignedTickets = $agent->assignedTickets();
+
+        $totalTickets = $assignedTickets->count();
+
+        $ticketsCounts = $assignedTickets
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return view('pages.dashboard.agent', compact('totalTickets', "ticketsCounts"));
     }
 }

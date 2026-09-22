@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\TicketStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
@@ -11,12 +12,23 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
+//        $tickets = $request->user()
+//            ->tickets()
+//            ->where('status', '!=', 'closed')
+//            ->where('status', '!=', 'in_progress')
+//            ->latest()
+//            ->paginate(10);
         $tickets = $request->user()
             ->tickets()
-            ->where('status', '!=', 'closed')
-            ->where('status', '!=', 'in_progress')
             ->latest()
             ->paginate(10);
-        return view('pages.dashboard.customer', compact('tickets'));
+
+        $ticketsCounts = $request->user()
+            ->tickets()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return view('pages.dashboard.customer', compact('tickets', 'ticketsCounts'));
     }
 }

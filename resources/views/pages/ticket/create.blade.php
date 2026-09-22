@@ -9,23 +9,26 @@
     <form action="{{route('tickets.store')}}" method="post" enctype="multipart/form-data">
         @csrf
 
-        <x-ticketCard :grid="'grid grid-cols-1 md:grid-cols-6 gap-6 bg-white'">
+        <x-ticketCard :grid="'grid grid-cols-1 md:grid-cols-2 gap-6 bg-white'">
 
             @if(auth()->user()->role === \App\Enums\UserRole::Admin)
-                <label for="customer_id">Customer</label>
-                <select name="customer_id" id="customer_id" class="input-form-style">
-                    @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
-                            {{ $customer->name }} ({{ $customer->email }})
-                        </option>
-                    @endforeach
-                </select>
-                @error('customer_id') <p class="error">{{ $message }}</p> @enderror
+                <div class="w-1/2">
+                    <label for="customer_id">Customer</label>
+                    <select name="customer_id" id="customer_id" class="input-form-style">
+                        @foreach($customers as $customer)
+                            <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
+                                {{ $customer->name }} ({{ $customer->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('customer_id') <p class="error">{{ $message }}</p> @enderror
+                </div>
             @endif
 
-            <div class="md:col-span-4">
+            <div class="md:col-span-3">
                 <x-input-field
                     :label="'Subject'"
+                    :name="'subject'"
                     :placeholder="'Enter the subject of your ticket...'"
                     value="{{old('subject')}}"
                 ></x-input-field>
@@ -35,7 +38,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <label for="category" class="block text-sm font-medium text-slate-900">Category</label>
+                <label for="category" class="filter-title">Category</label>
                 <select name="category" id="category" class="input-form-style cursor-pointer">
                     @foreach(TicketCategory::cases() as $category)
                         <option value="{{ $category->value }}" {{ old('category') === $category->value ? 'selected' : '' }}>
@@ -49,7 +52,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <label for="priority" class="block text-sm font-medium text-slate-900">Priority</label>
+                <label for="priority" class="filter-title">Priority</label>
                 <select name="priority" id="priority" class="input-form-style cursor-pointer">
                     @foreach(TicketPriority::cases() as $priority)
                         <option value="{{ $priority->value }}" {{ old('priority', TicketPriority::Low->value) === $priority->value ? 'selected' : '' }}>
@@ -63,7 +66,7 @@
             </div>
 
             <div class="col-span-full">
-                <label for="description" class="block text-sm font-medium text-slate-900">Description</label>
+                <label for="description" class="filter-title">Description</label>
                 <textarea
                     name="description"
                     id="description"
@@ -77,7 +80,7 @@
             </div>
 
             <div class="md:col-span-3">
-                <label for="attachment" class="block text-sm font-medium text-slate-900">Attachment (optional)</label>
+                <label for="attachment" class="filter-title">Attachment (optional)</label>
                 <input
                     type="file"
                     name="attachments[]"
