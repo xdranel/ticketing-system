@@ -37,7 +37,7 @@ class TicketSeeder extends Seeder
 //            });
 
         Ticket::factory()
-            ->count(100)
+            ->count(50)
             ->make()
             ->each(function (Ticket $ticket) use ($customer, $agent) {
                 $ticket->customer_id = $customer->random()->id;

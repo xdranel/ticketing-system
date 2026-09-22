@@ -20,7 +20,7 @@
             <span
                 class="@if($ticket->status === App\Enums\TicketStatus::Open) text-slate-100 bg-green-500
                 @elseif($ticket->status === App\Enums\TicketStatus::InProgress) text-slate-100 bg-yellow-500
-                @elseif($ticket->status === App\Enums\TicketStatus::Closed) text-slate-00 bg-red-500 @endif rounded-full px-2 py-1">
+                @elseif($ticket->status === App\Enums\TicketStatus::Closed) text-slate-100 bg-red-500 @endif rounded-full px-2 py-1">
         {{ $ticket->status->name }}
     </span>
         </p>

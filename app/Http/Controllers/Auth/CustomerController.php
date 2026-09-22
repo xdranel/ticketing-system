@@ -17,11 +17,11 @@ class CustomerController extends Controller
 //            ->where('status', '!=', 'closed')
 //            ->where('status', '!=', 'in_progress')
 //            ->latest()
+////            ->paginate(10);
+//        $tickets = $request->user()
+//            ->tickets()
+//            ->latest()
 //            ->paginate(10);
-        $tickets = $request->user()
-            ->tickets()
-            ->latest()
-            ->paginate(10);
 
         $ticketsCounts = $request->user()
             ->tickets()
@@ -29,6 +29,6 @@ class CustomerController extends Controller
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('pages.dashboard.customer', compact('tickets', 'ticketsCounts'));
+        return view('pages.dashboard.customer', compact('ticketsCounts'));
     }
 }

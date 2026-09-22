@@ -127,7 +127,7 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Request $request, Ticket $ticket)
     {
         $this->authorize('view', $ticket);
         $ticket->load([
@@ -137,9 +137,15 @@ class TicketController extends Controller
             'replies.user'
         ]);
 
-        $activities = ActivityLog::where('ticket_id', $ticket->id)
-            ->where('ticket_reference', $ticket->reference)
-            ->orderByDesc('created_at')
+        $activitiesQuery = ActivityLog::where('ticket_id', $ticket->id)
+            ->where('ticket_reference', $ticket->reference);
+
+        if ($request->user()->role === UserRole::Customer) {
+            $activitiesQuery->where('visibility', 'public');
+        }
+
+        $activities = $activitiesQuery
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('pages.ticket.show', compact('ticket', 'activities'));
@@ -231,24 +237,24 @@ class TicketController extends Controller
 
             $oldAssigneeName = $oldAssignee?->name ?? 'Unassigned';
             $newAssigneeName = $newAssignee?->name ?? 'Unassigned';
-        }
 
-        $this->activityLog->log(
-            ticket: $ticket,
-            actor: $request->user(),
-            action: 'ticket.assigned',
-            description: sprintf(
-                'Ticket assigned from %s to %s',
-                $oldAssigneeName,
-                $newAssigneeName
-            ),
-            metadata: [
-                'old_assignee_id' => $oldAssignedId,
-                'old_assignee_name' => $oldAssigneeName,
-                'new_assignee_id' => $ticket->assigned_to,
-                'new_assignee_name' => $newAssigneeName,
-            ]
-        );
+            $this->activityLog->log(
+                ticket: $ticket,
+                actor: $request->user(),
+                action: 'ticket.assigned',
+                description: sprintf(
+                    'Ticket assigned from %s to %s',
+                    $oldAssigneeName,
+                    $newAssigneeName
+                ),
+                metadata: [
+                    'old_assignee_id' => $oldAssignedId,
+                    'old_assignee_name' => $oldAssigneeName,
+                    'new_assignee_id' => $ticket->assigned_to,
+                    'new_assignee_name' => $newAssigneeName,
+                ]
+            );
+        }
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket updated successfully.');
