@@ -1,66 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ticketing System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A ticketing system built with Laravel(Blade), Tailwind CSS, MySQL and MongoDB.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Customer Features
+- Ticket Status of a customer.
+- Browse ticket by searching and filter(category, priority, status).
+- Submit a ticket and uploading attachment file.
+- See only their activities timelines.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Agent Features
+- Ticket Status only for that Agent.
+- Update a ticket workflow by changing the status and download attachment.
+- See agent and admin activities timelines.
 
-## Learning Laravel
+### Admin Features
+- All Ticket Status of Customer
+- Browse ticket by searching and filter(category, priority, status).
+- Submit a ticket for a customer.
+- Update a ticket workflow by changing the status etc and download attachment.
+- Assigning a ticket for Agent.
+- See agent and admin activities timelines.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Backend:** PHP, Laravel, MySQL, MongoDB  
+**Frontend:** Blade, TailwindCSS
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Prerequisites
 
-## Laravel Sponsors
+- PHP 8.2+
+- Laravel 11.31+
+- MongoDB 5.8+
+- MySQL 8.0+
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Quick Start
 
-### Premium Partners
+1. **Clone and Navigate**
+```bash
+git clone https://github.com/xdranel/ticketing-system
+```
+and then
+```bash
+cd ticketing-system
+```  
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+2. **Configure Environment**
 
-## Contributing
+Copy & paste file `.env.example` and change the file name to `.env` and fill in the required values
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+or you can do
+```bash
+cp .env.example .env
+```  
 
-## Code of Conduct
+Required changes in `.env`:  
+uncomment the line below
+and fill it with your database credentials
+```
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
+MONGODB_DATABASE=
+```
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. **Create Database**  
 
-## Security Vulnerabilities
+If you using a mysql panel/tools you might want to make it from the panel.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you using a cli, you can just use
+```bash
+mysql -u root -p -e "CREATE DATABASE value_of_DB_DATABASE;"
+```  
+---
 
-## License
+4. **Setup Application**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Open Terminal and run:
+```bash
+composer install
+npm install
+```
+---
+
+5. **Run Application**
+
+Open 2 terminal  
+
+Terminal 1:
+```bash
+php artisan serve
+```
+
+Terminal 2:  
+```bash
+npm run dev
+```
+---
+
+6. **Access Application**
+```bash
+http://localhost:8000/
+```

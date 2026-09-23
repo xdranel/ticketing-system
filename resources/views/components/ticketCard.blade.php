@@ -1,6 +1,6 @@
 @props([
-    'grid' => '',
     'ticket' => null,
+    'style' => ''
 ])
 
 {{--<div class="mx-auto p-8 rounded-lg shadow-lg {{$grid}}">--}}
@@ -13,20 +13,22 @@
 {{--</div>--}}
 
 
-<div class="mx-auto p-8 rounded-lg shadow-lg {{ $grid }}">
+<div class="mx-auto p-8 rounded-lg shadow-lg m-4 {{ $style }}">
     @if($ticket)
         <h2 class="text-2xl font-bold">{{ $ticket->subject }}</h2>
-        <p>{{ $ticket->reference }} ·
+        <p class="text-lg mt-3" >{{ $ticket->reference }} ·
             <span
                 class="@if($ticket->status === App\Enums\TicketStatus::Open) text-slate-100 bg-green-500
                 @elseif($ticket->status === App\Enums\TicketStatus::InProgress) text-slate-100 bg-yellow-500
-                @elseif($ticket->status === App\Enums\TicketStatus::Closed) text-slate-100 bg-red-500 @endif rounded-full px-2 py-1">
+                @elseif($ticket->status === App\Enums\TicketStatus::Closed) text-slate-100 bg-red-500 @endif rounded-md px-2 py-1">
         {{ $ticket->status->name }}
     </span>
         </p>
-        <p class="text-slate-600">{{ $ticket->description }}</p>
+        <p class="text-slate-600 mt-3">{{ $ticket->description }}</p>
         @can('view', $ticket)
-            <a href="{{ route('tickets.show', $ticket) }}">View Ticket</a>
+            <div class="mt-4">
+                <a href="{{ route('tickets.show', $ticket) }}">View Ticket</a>
+            </div>
         @endcan
     @else
         {{ $slot }}

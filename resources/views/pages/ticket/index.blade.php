@@ -48,25 +48,28 @@
                         :selected="request('status')"
                     />
                 </div>
-
-                <div class="flex items-end gap-2">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-center" dir="rtl">
+                    <a href="{{ route('tickets.index') }}" class="primary-btn-1">Reset</a>
                     <button
                         type="submit"
                         class="primary-btn-1"
-                    >Apply</button>
-                    <a href="{{ route('tickets.index') }}" class="primary-btn-1">Reset</a>
+                    >Apply
+                    </button>
                 </div>
-
             </form>
         </div>
     </div>
+
 
     @if(session('success'))
         <x-flashMsg msg="{{session('success')}}"/>
     @endif
 
     @forelse($tickets as $ticket)
-        <x-ticketCard :ticket="$ticket"/>
+        <x-ticketCard :style="'border border-slate-500'" :ticket="$ticket"/>
     @empty
         <p>No tickets found.</p>
     @endforelse
