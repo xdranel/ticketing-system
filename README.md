@@ -53,7 +53,7 @@ cd ticketing-system
 
 Copy & paste file `.env.example` and change the file name to `.env` and fill in the required values
 
-or you can do
+or you can do it on terminal
 ```bash
 cp .env.example .env
 ```  
@@ -75,7 +75,7 @@ If you using a mysql panel/tools you might want to make it from the panel.
 
 If you using a cli, you can just use
 ```bash
-mysql -u root -p -e "CREATE DATABASE value_of_DB_DATABASE;"
+mysql -u value_of_DB_USERNAME -p -e "CREATE DATABASE value_of_DB_DATABASE;"
 ```  
 ---
 
