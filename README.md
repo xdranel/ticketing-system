@@ -71,7 +71,8 @@ MONGODB_DATABASE=
 
 3. **Create Database**  
 
-If you using a mysql panel/tools you might want to make it from the panel.
+If you using a mysql panel/tools you might want to make it from the panel  
+and make database with the name of `value_of_DB_DATABASE` 
 
 If you using a cli, you can just use
 ```bash
@@ -90,6 +91,7 @@ and then
 ```bash
 php artisan key:generate
 php artisan migrate:fresh --seed
+```
 ---
 
 5. **Run Application**
