@@ -86,6 +86,10 @@ Open Terminal and run:
 composer install
 npm install
 ```
+and then
+```bash
+php artisan key:generate
+php artisan migrate:fresh --seed
 ---
 
 5. **Run Application**
