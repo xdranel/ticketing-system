@@ -1,8 +1,4 @@
 <x-layout>
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-slate-800">Admin Dashboard</h1>
-    </div>
-
     <div class="flex flex-col gap-8 mx-4">
         <p class="text-2xl font-bold text-slate-800">
             All Ticket Status

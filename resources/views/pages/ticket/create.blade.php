@@ -12,7 +12,7 @@
         <x-ticketCard :style="'grid grid-cols-1 md:grid-cols-3 gap-6 bg-white'">
 
             @if(auth()->user()->role === \App\Enums\UserRole::Admin)
-                <div class="w-1/2">
+                <div class="w-full">
                     <label for="customer_id">Customer</label>
                     <select name="customer_id" id="customer_id" class="input-form-style">
                         @foreach($customers as $customer)

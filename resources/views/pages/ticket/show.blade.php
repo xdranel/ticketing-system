@@ -50,14 +50,97 @@
         @endforelse
 
         @can('update', $ticket)
-            <a href="{{ route('tickets.edit', $ticket) }}">Update Workflow</a>
+            <a href="{{ route('tickets.edit', $ticket) }}"
+               class="primary-btn-2 mt-4 inline-block text-center"
+            >Update Workflow</a>
         @endcan
 
         @can('delete', $ticket)
             <form action="{{ route('tickets.destroy', $ticket) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit">Delete</button>
+                <button
+                    type="submit"
+                    class="primary-btn-2 mt-4"
+                >Delete</button>
+            </form>
+        @endcan
+    </x-defaultCard>
+
+    <x-defaultCard :style="'m-4 border border-slate-900'">
+        <h1 class="normal-title">
+            <span>Replies</span>
+        </h1>
+        <div class="mt-4 border-t border-slate-600 space-y-4"></div>
+
+
+        <div class="mt-4 space-y-4">
+            @forelse($ticket->replies as $reply)
+
+                <div class="flex {{ $reply->is_mine ? 'justify-end' : 'justify-start' }} ">
+
+                    <div
+                        class="max-w-l p-4 border border-slate-600 rounded-lg {{ $reply->is_mine ? 'bg-indigo-900 text-white' : 'bg-white text-slate-900' }}">
+
+                        <div class="flex justify-between items-center">
+                            <strong>
+                                {{ $reply->user->name }}
+                                @if($reply->is_mine)
+                                    <span class="text-xs font-normal opacity-75">(You)</span>
+                                @endif
+                            </strong>
+                            &nbsp;
+                            <span class="text-sm {{ $reply->is_mine ? 'text-indigo-200' : 'text-slate-500' }}">
+                                {{ $reply->created_at->format('d M, Y H:i')}}
+                            </span>
+                        </div>
+
+                        <p class="mt-2 whitespace-pre-line">
+                            {{ $reply->message }}
+                        </p>
+                    </div>
+                </div>
+            @empty
+                <p>No replies yet</p>
+            @endforelse
+        </div>
+
+        @can('reply', $ticket)
+            <form
+                action="{{ route('tickets.replies.store', $ticket) }}"
+                method="POST"
+                class="mt-6"
+            >
+                @csrf
+
+                <div>
+                    <label for="message"
+                           class="block text-sm font-bold text-slate-900 mb-2"
+                    >
+                        Reply
+                    </label>
+
+                    <textarea
+                        name="message"
+                        id="message"
+                        rows="5"
+                        required
+                        class="w-full p-2 border rounded-lg"
+                    >{{ old('message') }}</textarea>
+
+                    @error('message')
+                    <p class="text-red-500 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                    @enderror
+                </div>
+
+                <button
+                    type="submit"
+                    class="primary-btn-2 mt-4"
+                >
+                    Send Reply
+                </button>
             </form>
         @endcan
     </x-defaultCard>
@@ -122,77 +205,4 @@
             </div>
         </x-defaultCard>
     @endif
-
-    <x-defaultCard :style="'m-4 border border-slate-900'">
-        <h1 class="normal-title">
-            <span>Replies</span>
-        </h1>
-        <div class="mt-4 border-t border-slate-600 space-y-4"></div>
-
-
-        <div class="mt-4 space-y-4">
-            @forelse($ticket->replies as $reply)
-
-                <div class="flex {{ $reply->is_mine ? 'justify-end' : 'justify-start' }} ">
-
-                    <div
-                        class="max-w-l p-4 border border-slate-600 rounded-lg {{ $reply->is_mine ? 'bg-indigo-900 text-white' : 'bg-white text-slate-900' }}">
-
-                        <div class="flex justify-between items-center">
-                            <strong>
-                                {{ $reply->user->name }}
-                                @if($reply->is_mine)
-                                    <span class="text-xs font-normal opacity-75">(You)</span>
-                                @endif
-                            </strong>
-                            &nbsp;
-                            <span class="text-sm {{ $reply->is_mine ? 'text-indigo-200' : 'text-slate-500' }}">
-                                {{ $reply->created_at->format('d M, Y H:i')}}
-                            </span>
-                        </div>
-
-                        <p class="mt-2 whitespace-pre-line">
-                            {{ $reply->message }}
-                        </p>
-                    </div>
-                </div>
-            @empty
-                <p>No replies yet</p>
-            @endforelse
-        </div>
-
-        @can('reply', $ticket)
-            <form
-                action="{{ route('tickets.replies.store', $ticket) }}"
-                method="POST"
-                class="mt-6"
-            >
-                @csrf
-
-                <div>
-                    <label for="message">
-                        Reply
-                    </label>
-
-                    <textarea
-                        name="message"
-                        id="message"
-                        rows="5"
-                        required
-                        class="w-full p-2 border rounded-lg"
-                    >{{ old('message') }}</textarea>
-
-                    @error('message')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                    @enderror
-                </div>
-
-                <button type="submit">
-                    Send Reply
-                </button>
-            </form>
-        @endcan
-    </x-defaultCard>
 </x-layout>
