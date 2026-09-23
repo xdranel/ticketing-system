@@ -31,4 +31,9 @@ class TicketReply extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getIsMineAttribute(): bool
+    {
+        return $this->user_id === auth()->id();
+    }
 }

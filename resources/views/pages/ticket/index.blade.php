@@ -3,7 +3,7 @@
         <div class="flex items-center gap-4">
             <h1 class="text-2xl font-bold">Tickets</h1>
             @can('create', \App\Models\Ticket::class)
-                <a href="{{ route('tickets.create') }}" class="primary-btn-1">Create Ticket</a>
+                <a href="{{ route('tickets.create') }}" class="primary-btn-1 m-4=2">Create Ticket</a>
             @endcan
         </div>
 
@@ -11,7 +11,7 @@
             <form
                 action="{{ route('tickets.index') }}"
                 method="GET"
-                class="grid grid-cols-1 md:grid-cols-4 gap-4"
+                class="grid grid-cols-1 md:grid-cols-4 gap-2"
             >
                 <div>
                     <x-input-field
@@ -50,14 +50,13 @@
                 </div>
                 <div></div>
                 <div></div>
-                <div></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-center" dir="rtl">
-                    <a href="{{ route('tickets.index') }}" class="primary-btn-1">Reset</a>
+                <div class="col-span-2 flex justify-end gap-2">
                     <button
                         type="submit"
                         class="primary-btn-1"
                     >Apply
                     </button>
+                    <a href="{{ route('tickets.index') }}" class="primary-btn-1 text-center">Reset</a>
                 </div>
             </form>
         </div>

@@ -1,16 +1,37 @@
 <x-layout>
-    <x-defaultCard>
+    <x-defaultCard :style="'m-4 border border-slate-900'">
         @if(session('success'))
             <x-flashMsg msg="{{session('success')}}"/>
         @endif
-        <h1 class="text-2xl font-bold">{{ $ticket->subject }}</h1>
-        <p>Reference: {{ $ticket->reference }}</p>
-        <p>Customer: {{ $ticket->customer->name }}</p>
-        <p>Agent: {{ $ticket->assignee?->name ?? 'Unassigned' }}</p>
-        <p>Category: {{ str($ticket->category->name)->headline() }}</p>
-        <p>Priority: {{ str($ticket->priority->name)->headline() }}</p>
-        <p>Status: {{ str($ticket->status->name)->headline() }}</p>
-        <p>Description: <br/>{{ $ticket->description }}</p>
+        <h1 class="text-2xl font-bold mb-2">{{ $ticket->subject }}</h1>
+        <p class="mb-2">
+            <strong>Reference:</strong>
+            <span class="underline">{{ $ticket->reference }}</span>
+        </p>
+
+        <p>
+            <strong>Customer:</strong> {{ $ticket->customer->name }}
+        </p>
+
+        <p class="mb-2">
+            <strong>Agent:</strong> {{ $ticket->assignee?->name ?? 'Unassigned' }}
+        </p>
+
+        <p>
+            <strong>Category:</strong> {{ str($ticket->category->name)->headline() }}
+        </p>
+
+        <p>
+            <strong>Priority:</strong> {{ str($ticket->priority->name)->headline() }}
+        </p>
+
+        <p class="mb-2">
+            <strong>Status:</strong> {{ str($ticket->status->name)->headline() }}
+        </p>
+
+        <p class="mb-2">
+            <strong>Description:</strong> <br/>{{ $ticket->description }}
+        </p>
         <strong>Attachments:</strong>
         @forelse($ticket->attachments as $attachment)
             <div class="flex items-center gap-2">
@@ -41,87 +62,99 @@
         @endcan
     </x-defaultCard>
 
-    <x-defaultCard>
-        <div x-data="{ open: false }">
-            <h4>Activity Timeline</h4>
+    @if(auth()->user()->role === \App\Enums\UserRole::Admin)
+        <x-defaultCard :style="'m-4'">
+            <div x-data="{ open: false }">
 
-            <button
-                @click="open = !open"
-                class="w-full flex items-center justify-between text-left focus:outline-none group cursor-pointer py-2">
+                <button
+                    @click="open = !open"
+                    class="w-full flex items-center justify-between text-left focus:outline-none group cursor-pointer py-2">
 
-                <h3 class="text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
-                    Activities Timeline
-                </h3>
+                    <h3 class="text-lg font-semibold text-slate-800 group-hover:text-slate-400 transition-colors">
+                        Activities Timeline
+                    </h3>
 
-                <!-- Rotating Arrow Icon -->
-                <svg
-                    :class="{ 'rotate-90': open }"
-                    class="w-5 h-5 text-gray-500 transform transition-transform duration-200"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
+                    <!-- Rotating Arrow Icon -->
+                    <svg
+                        :class="{ 'rotate-90': open }"
+                        class="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
 
-            <div x-show="open"
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 transform -translate-y-2"
-                 x-transition:enter-end="opacity-100 transform translate-y-0"
-                 class="mt-4 pt-4 border-t border-gray-100 space-y-4"
-            >
-                @forelse ($activities as $activity)
-                    <div class="border-start border-3 ps-3 mb-4">
+                <div x-show="open"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 transform -translate-y-2"
+                     x-transition:enter-end="opacity-100 transform translate-y-0"
+                     class="mt-4 pt-4 border-t border-slate-600 space-y-4"
+                >
+                    @forelse ($activities as $activity)
+                        <div class="border-start border-3 ps-3 mb-4">
 
-                        <div class="d-flex justify-content-between">
-                            <strong>
-                                {{ $activity->actor_name }}
-                            </strong>
+                            <div class="d-flex justify-content-between">
+                                <strong>
+                                    {{ $activity->actor_name }}
+                                </strong>
+
+                                <small class="text-muted">
+                                    {{ $activity->created_at?->format('d M Y H:i') }}
+                                </small>
+                            </div>
+
+                            <div class="mt-1">
+                                {{ $activity->description }}
+                            </div>
 
                             <small class="text-muted">
-                                {{ $activity->created_at?->format('d M Y H:i') }}
+                                {{ $activity->action }}
                             </small>
+
                         </div>
-
-                        <div class="mt-1">
-                            {{ $activity->description }}
-                        </div>
-
-                        <small class="text-muted">
-                            {{ $activity->action }}
-                        </small>
-
-                    </div>
-                @empty
-                    <p class="text-muted mb-0">
-                        No activity recorded yet.
-                    </p>
-                @endforelse
+                    @empty
+                        <p class="text-muted mb-0">
+                            No activity recorded yet.
+                        </p>
+                    @endforelse
+                </div>
             </div>
-        </div>
-    </x-defaultCard>
+        </x-defaultCard>
+    @endif
 
-    <x-defaultCard>
-        <h2 class="normal-title">
+    <x-defaultCard :style="'m-4 border border-slate-900'">
+        <h1 class="normal-title">
             <span>Replies</span>
-        </h2>
+        </h1>
+        <div class="mt-4 border-t border-slate-600 space-y-4"></div>
+
 
         <div class="mt-4 space-y-4">
             @forelse($ticket->replies as $reply)
-                <div class="p-4 border rounded-lg shadow-md">
-                    <div class="flex justify-between">
-                        <strong>
-                            {{ $reply->user->name }}
-                        </strong>
 
-                        <span class="text-sm text-gray-500">
-                            {{ $reply->created_at->format('d M, Y H:i')}}
-                        </span>
+                <div class="flex {{ $reply->is_mine ? 'justify-end' : 'justify-start' }} ">
+
+                    <div
+                        class="max-w-l p-4 border border-slate-600 rounded-lg {{ $reply->is_mine ? 'bg-indigo-900 text-white' : 'bg-white text-slate-900' }}">
+
+                        <div class="flex justify-between items-center">
+                            <strong>
+                                {{ $reply->user->name }}
+                                @if($reply->is_mine)
+                                    <span class="text-xs font-normal opacity-75">(You)</span>
+                                @endif
+                            </strong>
+                            &nbsp;
+                            <span class="text-sm {{ $reply->is_mine ? 'text-indigo-200' : 'text-slate-500' }}">
+                                {{ $reply->created_at->format('d M, Y H:i')}}
+                            </span>
+                        </div>
+
+                        <p class="mt-2 whitespace-pre-line">
+                            {{ $reply->message }}
+                        </p>
                     </div>
-
-                    <p class="mt-2 whitespace-pre-line">
-                        {{ $reply->message }}
-                    </p>
                 </div>
             @empty
                 <p>No replies yet</p>

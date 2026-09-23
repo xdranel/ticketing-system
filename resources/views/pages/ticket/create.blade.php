@@ -9,7 +9,7 @@
     <form action="{{route('tickets.store')}}" method="post" enctype="multipart/form-data">
         @csrf
 
-        <x-ticketCard :style="'grid grid-cols-1 md:grid-cols-2 gap-6 bg-white'">
+        <x-ticketCard :style="'grid grid-cols-1 md:grid-cols-3 gap-6 bg-white'">
 
             @if(auth()->user()->role === \App\Enums\UserRole::Admin)
                 <div class="w-1/2">
