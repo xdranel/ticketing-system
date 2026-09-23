@@ -112,4 +112,6 @@ npm run dev
 6. **Access Application**
 ```bash
 http://localhost:8000/
+or
+http://127.0.0.1:8000/
 ```
