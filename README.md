@@ -32,10 +32,10 @@ A ticketing system built with Laravel(Blade), Tailwind CSS, MySQL and MongoDB.
 
 ## Prerequisites
 
-- PHP 8.2+
-- Laravel 11.31+
-- MongoDB 5.8+
-- MySQL 8.0+
+- PHP 8.2 --- 8.4
+- Laravel 11
+- MongoDB 5.8
+- MySQL 8.0
 
 ## Quick Start
 
