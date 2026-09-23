@@ -115,3 +115,18 @@ http://localhost:8000/
 or
 http://127.0.0.1:8000/
 ```
+---
+
+### Existing Account for Testing
+you can check on Database/Seeders/DatabaseSeeder.php
+- Customer:  
+customer1@example.com / password  
+customer2@example.com / password  
+customer3@example.com / password  
+
+- Agent :  
+agent1@example.com / password  
+agent2@example.com / password  
+
+- Admin :  
+admin@example.com / password  
